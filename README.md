@@ -136,4 +136,4 @@ demo.exe
 
 ## Author
 
-Cucule — FMI UniBuc, Year 1, POO Course, 2025
+Baltazaurus — FMI UniBuc, Year 1, POO Course, 2026
