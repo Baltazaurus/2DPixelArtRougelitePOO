@@ -1,0 +1,4 @@
+
+cd C:\Users\ionga\Desktop\wrk\s2\poo1\testtemplate\demo
+chcp 65001
+demo.exe

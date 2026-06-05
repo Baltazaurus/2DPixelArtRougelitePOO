@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://bfqthoqi8gkcq"]
+
+[ext_resource type="Texture2D" uid="uid://vv1wihudeccb" path="res://resources/ui/heart_ui_empty.png" id="1_o0f0s"]
+[ext_resource type="Texture2D" uid="uid://c56g3l83ujk8a" path="res://resources/ui/heart_ui_full.png" id="2_h0tmb"]
+
+[node name="HeartsUI" type="Control" unique_id=1083800776]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 95.0
+offset_bottom = 40.0
+
+[node name="EmptyHearts" type="TextureRect" parent="." unique_id=2098993543]
+texture_filter = 1
+layout_mode = 0
+offset_right = 73.0
+offset_bottom = 12.0
+texture = ExtResource("1_o0f0s")
+stretch_mode = 1
+
+[node name="FullHearts" type="TextureRect" parent="." unique_id=600780301]
+texture_filter = 1
+layout_mode = 0
+offset_right = 74.0
+offset_bottom = 11.0
+texture = ExtResource("2_h0tmb")
+stretch_mode = 1

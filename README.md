@@ -1,56 +1,139 @@
-# godot-cpp template
-This repository serves as a quickstart template for GDExtension development with Godot 4.0+.
+# Roguelite Dungeon — POO Project
 
-## Contents
-* Preconfigured source files for C++ development of the GDExtension ([src/](./src/))
-* An empty Godot project in [project/](./project), to test the GDExtension
-* godot-cpp as a submodule (`godot-cpp/`)
-* GitHub Issues template ([.github/ISSUE_TEMPLATE.yml](./.github/ISSUE_TEMPLATE.yml))
-* GitHub CI/CD workflows to publish your library packages when creating a release ([.github/workflows/builds.yml](./.github/workflows/builds.yml))
-* An SConstruct file with various functions, such as boilerplate for [Adding documentation](https://docs.godotengine.org/en/stable/tutorials/scripting/cpp/gdextension_docs_system.html)
+A 2D top-down pixel art roguelite dungeon crawler built with **Godot 4.6** and **GDExtension (C++)** for the Object-Oriented Programming course at FMI UniBuc, Year 1.
 
-## Usage - Template
+---
 
-To use this template, log in to GitHub and click the green "Use this template" button at the top of the repository page. This will let you create a copy of this repository with a clean git history.
+## Overview
 
-To get started with your new GDExtension, do the following:
+The player explores a dungeon, fights enemies in waves, collects health potions, and tries to survive as long as possible. The entire game logic is written in C++ using Godot's GDExtension system — no GDScript for gameplay logic.
 
-* clone your repository to your local computer
-* initialize the godot-cpp git submodule via `git submodule update --init`
-* change the name of the compiled library file inside the [SConstruct](./SConstruct) file by modifying the `libname` string.
-  * change the paths of the to be loaded library name inside the [project/bin/example.gdextension](./project/bin/example.gdextension) file, by replacing `EXTENSION-NAME` with the name you chose for `libname`.
-* change the `entry_symbol` string inside [project/bin/example.gdextension](./project/bin/example.gdextension) file.
-  * rename the `example_library_init` function in [src/register_types.cpp](./src/register_types.cpp) to the same name you chose for `entry_symbol`.
-* change the name of the `project/bin/example.gdextension` file
+---
 
-Now, you can build the project with the following command:
+## Features
 
-```shell
-scons
+- **Wave-based combat** — enemies spawn in increasing waves around the player
+- **4-directional movement and animations** — run, attack, roll
+- **Enemy AI** — idle, wander, chase, attack states with detection radius
+- **Health system** — hearts UI, invincibility frames, blink animation on hit
+- **Potion drops** — 1/5 chance on enemy death, instant heal on pickup
+- **HUD** — wave counter, score, enemies remaining, wave announcement animation
+- **C++ terminal demo** — standalone program demonstrating all OOP requirements
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Engine | Godot 4.6.1 |
+| Language | C++17 |
+| Binding | GDExtension (godot-cpp) |
+| Build | SCons |
+| Demo | MSVC / CLion + CMake |
+
+---
+
+## Project Structure
+
+```
+testtemplate/
+├── src/
+│   ├── core/              # Pure C++ — no Godot dependency
+│   │   ├── types.h        # Enums + custom exceptions
+│   │   ├── stats.h/.cpp   # Stats class with operator overloads
+│   │   ├── entity.h/.cpp  # Abstract base class
+│   │   ├── player.h/.cpp  # Player class
+│   │   ├── enemy.h/.cpp   # Enemy class
+│   │   ├── item.h         # Abstract Item class
+│   │   ├── consumable.h/.cpp  # Consumable : Item
+│   │   ├── inventory.h    # std::list<Item*>
+│   │   ├── game_manager.h/.cpp  # Singleton, std::stack
+│   │   └── object_pool.h  # Template class ObjectPool<T>
+│   ├── player_node.h/.cpp    # GDE CharacterBody2D wrapper
+│   ├── enemy_node.h/.cpp     # GDE CharacterBody2D wrapper
+│   ├── hud_node.h/.cpp       # GDE Control, HUD updates
+│   ├── spawner_node.h/.cpp   # GDE wave spawner
+│   ├── potion_node.h/.cpp    # GDE Area2D potion pickup
+│   └── register_types.cpp    # GDE class registration
+├── demo/
+│   ├── main.cpp           # Standalone C++ terminal demo
+│   └── CMakeLists.txt     # Build config for CLion
+├── project/               # Godot project files
+│   ├── scenes/
+│   └── resources/
+└── godot-cpp/             # GDExtension bindings (submodule)
 ```
 
-If the build command worked, you can test it with the [project](./project) project. Import it into Godot, open it, and launch the main scene. You should see it print the following line in the console:
+---
 
+## OOP Requirements Covered
+
+### Tema 1
+- 3+ classes with composition and aggregation
+- Constructors, copy constructors, `operator=`, destructors
+- `operator<<`, `operator>>`, `operator+`, `operator==` on `Stats`
+- 4 complex public methods: `attackEnemy`, `pickupItem`, `levelUp`, `simulateCombat`
+- Read and display N objects
+
+### Tema 2
+- Abstract classes: `Entity` (3 pure virtuals), `Item` (2 pure virtuals)
+- Inheritance: `Player : Entity`, `Enemy : Entity`, `Consumable : Item`
+- Parent constructor called in initializer list
+- `const` on all getters
+- Static members: `entityCount`, `spawnedCount`
+- Custom exceptions: `InvalidTargetException`, `ItemNotFoundException`
+- `try/catch` blocks in demo
+- Explicit upcast and downcast with `dynamic_cast`
+- `typeid` usage
+- `std::list<Item*>` in `Inventory`
+- `std::stack<GameState>` in `GameManager`
+- 4 `enum class` types
+
+### Tema 3
+- `GameManager` singleton (private constructor, `getInstance()`)
+- `ObjectPool<T>` template class
+- `dynamic_cast` in production code (`Player::pickupItem`)
+- Virtual functions with `override`
+
+---
+
+## Building
+
+### Game (Godot + GDExtension)
+
+```bat
+cd testtemplate
+scons platform=windows
 ```
-Type: 24
+
+Then open `project/` in Godot 4.6.
+
+### Terminal Demo (CLion)
+
+Open the `demo/` folder in CLion — it auto-detects `CMakeLists.txt`.
+Press **Shift+F10** to run.
+
+Or manually with MSVC Developer Command Prompt:
+
+```bat
+cd demo
+cl /EHsc /std:c++17 /I.. main.cpp ..\src\core\stats.cpp ..\src\core\characters.cpp ..\src\core\player.cpp ..\src\core\consumable.cpp ..\src\core\entity.cpp ..\src\core\game_manager.cpp /Fe:demo.exe
+demo.exe
 ```
 
-### Configuring an IDE
-You can develop your own extension with any text editor and by invoking scons on the command line, but if you want to work with an IDE (Integrated Development Environment), you can use a compilation database file called `compile_commands.json`. Most IDEs should automatically identify this file, and self-configure appropriately.
-To generate the database file, you can run one of the following commands in the project root directory:
-```shell
-# Generate compile_commands.json while compiling
-scons compiledb=yes
+---
 
-# Generate compile_commands.json without compiling
-scons compiledb=yes compile_commands.json
-```
+## Controls
 
-## Usage - Actions
+| Key | Action |
+|-----|--------|
+| WASD | Move |
+| K | Attack |
+| Space | Roll |
 
-This repository comes with continuous integration (CI) through a GitHub action that tests building the GDExtension.
-It triggers automatically for each pushed change. You can find and edit it in [builds.yml](.github/workflows/ci.yml).
+---
 
-There is also a workflow ([make_build.yml](.github/workflows/make_build.yml)) that builds the GDExtension for all supported platforms that you can use to create releases.
-You can trigger this workflow manually from the `Actions` tab on GitHub.
-After it is complete, you can find the file `godot-cpp-template.zip` in the `Artifacts` section of the workflow run.
+## Author
+
+Cucule — FMI UniBuc, Year 1, POO Course, 2025

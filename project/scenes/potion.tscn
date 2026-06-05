@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bg7dhbn3fblqt"]
+
+[ext_resource type="Texture2D" uid="uid://cenc8j0iylfl0" path="res://resources/world/nesitems.png" id="1_ym5ma"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_le10y"]
+radius = 7.0
+
+[node name="potion" type="PotionNode" unique_id=1600415972]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1412182231]
+texture_filter = 1
+scale = Vector2(0.5333333, 0.53333336)
+texture = ExtResource("1_ym5ma")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1666733952]
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_le10y")
